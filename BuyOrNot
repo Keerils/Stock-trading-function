@@ -1,0 +1,26 @@
+import yfinance as yf
+def get_price_dict(stockkey, timeperiod):
+    stock = yf.Ticker(stockkey)
+    hist = stock.history(period=timeperiod)
+    histopen = hist["Open"]
+    histhigh = hist["High"]
+    index = 0
+    opentohigh = {}
+    for price in histopen:
+        opentohigh[index] = [histopen[index], histhigh[index]]
+        index += 1
+    return opentohigh
+def buy_or_not(stockkey, has_stock, *buy_price):
+    pricedict = get_price_dict(stockkey, "2wk")
+    index = 1
+    buyornotlist = []
+    for i in range(len(pricedict) - 1):
+        if pricedict[9] < pricedict[8] and pricedict[8] < pricedict[7] and pricedict[7] < pricedict[6] and pricedict[6] < pricedict[5] and pricedict[5] < pricedict[4] and pricedict[4] < pricedict[3] < pricedict[3] < pricedict[2] and pricedict[2] < pricedict[1] and pricedict[1] < pricedict[0]:
+            buyornotlist.append("buy")
+        elif pricedict[index - 1][1] < pricedict[index][1] and pricedict[index - 1][0] < pricedict[index][0] and buy_price < pricedict[0][0] and buy_price < pricedict[0][1] and has_stock == True:
+            buyornotlist.append('sell')
+        else:
+            buyornotlist.append("do nothing")
+        index += 1
+    print(buyornotlist[0])
+#buy_or_not(stock_symbol, bool value if you have stock, and optional buy price if you did.) returns whether or not you should buy a stock
